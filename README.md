@@ -5,7 +5,7 @@
   * git checkout master
 
 * masterブランチを最新状態にする
-  * git pull.........
+  * git pull
 
 * 新しいpagename_user1ブランチに切り替える
   * git checkout -b pagename_user1
