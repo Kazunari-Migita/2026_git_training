@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to UPGARAGE GROUP</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      overflow: hidden;
+      height: 100vh;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      background: #0a0a1a;
+    }
+
+    /* ── Canvas background ── */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    /* ── Centered content ── */
+    .hero {
+      position: relative;
+      z-index: 10;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-block;
+      background: rgba(220, 38, 38, 0.85);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 6px 20px;
+      border-radius: 999px;
+      margin-bottom: 32px;
+      border: 1px solid rgba(255,255,255,0.25);
+      backdrop-filter: blur(6px);
+      animation: fadeDown 1s ease both;
+    }
+
+    /* ── Main heading ── */
+    .main-title {
+      font-size: clamp(2.4rem, 7vw, 6.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: #fff;
+      animation: fadeUp 1s ease 0.2s both;
+    }
+
+    .main-title .highlight {
+      display: block;
+      background: linear-gradient(90deg, #ef4444, #3b82f6, #fff);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite, fadeUp 1s ease 0.2s both;
+    }
+
+    /* ── Sub text ── */
+    .sub-text {
+      margin-top: 28px;
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.08em;
+      animation: fadeUp 1s ease 0.45s both;
+    }
+
+    /* ── CTA Button ── */
+    .cta-btn {
+      margin-top: 48px;
+      display: inline-block;
+      padding: 16px 44px;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #fff;
+      background: linear-gradient(135deg, #dc2626 0%, #1d4ed8 100%);
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      animation: fadeUp 1s ease 0.65s both;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(220,38,38,0.4);
+    }
+
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.12);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(59,130,246,0.5);
+    }
+
+    .cta-btn:hover::before { opacity: 1; }
+
+    /* ── Scroll indicator ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: fadeUp 1s ease 1.2s both;
+    }
+
+    .scroll-hint .line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+      animation: scrollLine 1.8s ease-in-out infinite;
+    }
+
+    /* ── Keyframes ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .name-list {
+      list-style: none;
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      animation: fadeUp 1s ease 0.8s both;
+    }
+
+    .name-list li {
+      font-size: clamp(1rem, 2.2vw, 1.4rem);
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+      letter-spacing: 0.15em;
+      padding: 6px 28px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+      background: rgba(255, 255, 255, 0.05);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .name-list li:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    @keyframes scrollLine {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50%       { opacity: 1;   transform: scaleY(1.3); }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="bg"></canvas>
+
+  <main class="hero">
+    <span class="badge">26卒の皆さん！！</span>
+
+    <h1 class="main-title">
+      Welcome to<br>
+      <span class="highlight">UPGARAGE GROUP</span>
+    </h1>
+
+    <ul class="name-list">
+      <li>名前を入力してください</li> 
+      <li>名前を入力してください</li>
+      <li>名前を入力してください</li>
+      <li>名前を入力してください</li>
+      <li>名前を入力してください</li>
+      
+    </ul>
+
+    <div class="scroll-hint">
+      <div class="line"></div>
+      <span>scroll</span>
+    </div>
+  </main>
+
+  <script>
+    // ── Particle / Wave canvas background ──────────────────────────────────
+    const canvas = document.getElementById('bg');
+    const ctx    = canvas.getContext('2d');
+
+    let W, H, particles = [], time = 0;
+
+    const COLORS = ['#ef4444', '#dc2626', '#3b82f6', '#1d4ed8', '#ffffff'];
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+      constructor() { this.reset(true); }
+
+      reset(init = false) {
+        this.x  = Math.random() * W;
+        this.y  = init ? Math.random() * H : H + 20;
+        this.r  = Math.random() * 2.5 + 0.5;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = -(Math.random() * 0.8 + 0.2);
+        this.alpha  = Math.random() * 0.6 + 0.2;
+        this.color  = COLORS[Math.floor(Math.random() * COLORS.length)];
+        this.twinkle = Math.random() * Math.PI * 2;
+        this.twinkleSpeed = Math.random() * 0.04 + 0.01;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.twinkle += this.twinkleSpeed;
+        if (this.y < -10) this.reset();
+      }
+
+      draw() {
+        const a = this.alpha * (0.6 + 0.4 * Math.sin(this.twinkle));
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = a;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.floor((W * H) / 5000);
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+    }
+
+    /* Draw flowing gradient waves */
+    function drawWaves() {
+      const amp   = H * 0.06;
+      const t     = time * 0.0010; // 非常にゆっくり
+
+      // Wave 1 – red
+      ctx.beginPath();
+      ctx.moveTo(0, H);
+      for (let x = 0; x <= W; x += 4) {
+        const y = H * 0.65
+          + Math.sin(x * 0.003 + t * 1.0) * amp
+          + Math.sin(x * 0.005 + t * 0.7 + 1) * amp * 0.4;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(W, H);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(220, 38, 38, 0.12)';
+      ctx.fill();
+
+      // Wave 2 – blue
+      ctx.beginPath();
+      ctx.moveTo(0, H);
+      for (let x = 0; x <= W; x += 4) {
+        const y = H * 0.72
+          + Math.sin(x * 0.004 + t * 0.8 + 2) * amp * 1.2
+          + Math.sin(x * 0.002 + t * 0.5)      * amp * 0.3;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(W, H);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(29, 78, 216, 0.12)';
+      ctx.fill();
+
+      // Wave 3 – white
+      ctx.beginPath();
+      ctx.moveTo(0, H);
+      for (let x = 0; x <= W; x += 4) {
+        const y = H * 0.80
+          + Math.sin(x * 0.003 + t * 0.6 + 4) * amp * 0.8;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(W, H);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.fill();
+    }
+
+    /* Animated gradient overlay */
+    function drawGradient() {
+      const shift = Math.sin(time * 0.0005) * 0.15;
+      const grad  = ctx.createRadialGradient(
+        W * (0.3 + shift), H * 0.4, 0,
+        W * (0.3 + shift), H * 0.4, W * 0.8
+      );
+      grad.addColorStop(0,   'rgba(29, 78, 216, 0.22)');
+      grad.addColorStop(0.5, 'rgba(10, 10, 26, 0)');
+      grad.addColorStop(1,   'rgba(220, 38, 38, 0.15)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function loop(ts) {
+      time = ts;
+
+      // Background
+      ctx.fillStyle = '#0a0a1a';
+      ctx.fillRect(0, 0, W, H);
+
+      drawGradient();
+      drawWaves();
+
+      particles.forEach(p => { p.update(); p.draw(); });
+
+      requestAnimationFrame(loop);
+    }
+
+    window.addEventListener('resize', () => { resize(); initParticles(); });
+
+    resize();
+    initParticles();
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>
